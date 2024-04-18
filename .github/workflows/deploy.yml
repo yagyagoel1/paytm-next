@@ -3,7 +3,8 @@ name: Build and Deploy to Docker Hub
 on:
   push:
     branches:
-      - master  # Adjusted to trigger on pushes to master
+      - master
+      - main  # Adjusted to trigger on pushes to master
 
 jobs:
   build-and-push:
