@@ -3,8 +3,8 @@ name: Build and Deploy to Docker Hub
 on:
   push:
     branches:
-      - master
-      - main  # Adjusted to trigger on pushes to master
+      - master 
+      - main # Adjusted to trigger on pushes to master
 
 jobs:
   build-and-push:
@@ -32,3 +32,15 @@ jobs:
 
     - name: Verify Pushed Image
       run: docker pull yagyagoel1/mynextapp:latest
+
+    - name: Deploy to EC2
+      uses: appleboy/ssh-action@main
+      with:
+        host: ${{ secrets.SSH_HOST }}
+        username: ${{ secrets.SSH_USERNAME }}
+        key: ${{ secrets.SSH_KEY }}
+        script: |
+          sudo docker pull yagyagoel1/mynextapp:latest
+          sudo docker stop mynextapp || true
+          sudo docker rm mynextapp || true
+          sudo docker run -d --name mynextapp -p 3005:3000 yagyagoel1/mynextapp:latest
